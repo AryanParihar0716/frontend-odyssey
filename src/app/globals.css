@@ -12,9 +12,12 @@
   --color-light-accent: #0066cc;
 }
 @layer base{
-body {
+html,body {
   @apply bg-dev-bg text-white antialiased;
-
+  cursor: none !important;
+  a, button, [role="button"] {
+    cursor: none !important;
+  }
   .light body {
     background-color: var(--color-light-bg);
     color: var(--color-light-text);
