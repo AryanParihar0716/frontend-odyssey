@@ -1,73 +1,76 @@
 "use client";
-import { useEffect, useRef, useState } from "react"; // Added useState
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import DeveloperSprite from "./DeveloperSprite";
+import { playSFX } from "../../utils/audio";
 
 export default function FinalPush() {
   const titleRef = useRef(null);
   const container = useRef();
-  
-  // STEP 1: Track if the component has mounted
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true); // Set to true once we are on the client
+    setHasMounted(true);
   }, []);
 
   useGSAP(() => {
-    if (!hasMounted) return; // Don't animate until we are mounted
+    if (!hasMounted) return;
+    playSFX('/sounds/success-chime.mp3', 0.4);
 
     gsap.from(titleRef.current, {
-      scale: 0.1,
+      scale: 0.5,
       opacity: 0,
-      duration: 1.8,
-      ease: "elastic.out(1, 0.3)",
-      scrollTrigger: {
-        trigger: titleRef.current,
-        start: "top 85%",
-      }
-    });
-
-    gsap.to(".celebration-sprite", {
-      y: -20,
-      repeat: -1,
-      yoyo: true,
-      duration: 0.4,
-      ease: "power1.inOut"
+      duration: 1.2,
+      ease: "elastic.out(1, 0.5)",
     });
   }, { scope: container, dependencies: [hasMounted] });
 
   return (
-    <section ref={container} className="h-screen bg-dev-green text-black flex flex-col items-center justify-center text-center p-6 relative overflow-hidden">
+    <section 
+      ref={container} 
+      className="h-screen w-full bg-dev-green text-black flex flex-col items-center justify-center relative overflow-hidden z-50"
+    >
       
-      {/* ... (Keep the ticker and main content the same) */}
+      <div className="absolute top-12 w-full overflow-hidden whitespace-nowrap opacity-20 font-black text-xl md:text-2xl uppercase tracking-[1em] select-none pointer-events-none">
+        SUCCESS... DEPLOYING... SUCCESS... DEPLOYING... SUCCESS...
+      </div>
 
-      <div className="z-10 flex flex-col items-center gap-6">
-        <div className="celebration-sprite">
-          <DeveloperSprite pose="success" />
+      <div className="z-10 flex flex-col items-center gap-4 md:gap-8">
+     
+        <div className="celebration-sprite animate-bounce pt-10">
+          <DeveloperSprite pose="success" accessory="party" />
         </div>
         
-        <div ref={titleRef} className="space-y-4">
-          <h2 className="text-7xl md:text-[12rem] font-black leading-none drop-shadow-xl">SHIP IT!</h2>
-          <div className="inline-block bg-black text-dev-green px-6 py-2 text-xl md:text-2xl font-bold uppercase transform -rotate-2">
+        
+        <div ref={titleRef} className="text-center">
+          <h2 className="text-[18vw] md:text-[14rem] font-black leading-[0.8] tracking-tighter uppercase drop-shadow-2xl">
+            SHIP IT!
+          </h2>
+          <div className="mt-6 inline-block bg-black text-dev-green px-6 py-2 md:px-10 md:py-3 text-xl md:text-3xl font-black uppercase transform -rotate-2 shadow-2xl">
             Build Successful
           </div>
         </div>
-        
-        {/* ... (Keep the logs and restart button) */}
+
+      
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="mt-12 font-mono font-bold uppercase tracking-widest text-xs border-b-2 border-black hover:pb-2 transition-all cursor-pointer"
+        >
+          &gt; REBOOT_JOURNEY
+        </button>
       </div>
 
-      {/* STEP 2: Only render the random rockets if we have mounted */}
+     
       {hasMounted && (
-        <div className="absolute inset-0 pointer-events-none opacity-30">
-          {[...Array(15)].map((_, i) => (
+        <div className="absolute inset-0 pointer-events-none opacity-50 z-0">
+          {[...Array(12)].map((_, i) => (
             <div 
               key={i} 
-              className="absolute text-2xl animate-bounce"
+              className="absolute text-4xl md:text-6xl animate-pulse"
               style={{ 
-                top: `${Math.random() * 100}%`, 
-                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 80 + 10}%`, 
+                left: `${Math.random() * 80 + 10}%`,
                 animationDelay: `${Math.random() * 2}s`
               }}
             >

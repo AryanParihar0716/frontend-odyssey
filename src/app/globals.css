@@ -1,26 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  /*Dark Mode Colors*/
   --color-dev-bg: #0a0a0a;
   --color-dev-green: #00ff41;
   --color-game-neon: #00f0ff;
   --color-panic-red: #ff3131;
-    /*Light Mode Colors*/
-  --color-light-bg: #f5f5f5;
-  --color-light-text: #1a1a1a;
-  --color-light-accent: #0066cc;
 }
-@layer base{
-html,body {
-  @apply bg-dev-bg text-white antialiased;
-  cursor: none !important;
-  a, button, [role="button"] {
+
+@layer base {
+  html, body {
+    @apply bg-dev-bg text-white antialiased selection:bg-dev-green selection:text-black;
     cursor: none !important;
+    transition: background-color 0.5s ease;
+    overflow-x: hidden;
   }
-  .light body {
-    background-color: var(--color-light-bg);
-    color: var(--color-light-text);
+
+  /* The Infamous "Flashbang" Light Mode */
+  .light {
+    --color-dev-bg: #f8f9fa;
+    --color-dev-text: #121212;
+    --color-dev-green: #0066cc;
   }
 }
+
+/* Glowing Grid Background Utility */
+.bg-grid {
+  background-image: radial-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
 }

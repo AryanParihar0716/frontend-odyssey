@@ -3,8 +3,9 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import DeveloperSprite from './DeveloperSprite';
+import { playSFX } from "../../utils/audio";
 
-// Mandatory registration for the competition tech stack [cite: 16]
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -14,9 +15,9 @@ export default function Intro() {
   const parallaxRef = useRef(null);
 
   useGSAP(() => {
-    // 1. Parallax Effect: Background text moves at a different speed [cite: 21]
+  
     gsap.to(parallaxRef.current, {
-      yPercent: -20,
+      yPercent: -30,
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.current,
@@ -26,52 +27,77 @@ export default function Intro() {
       },
     });
 
-    // 2. Reveal Animation: Making sure cards actually appear [cite: 23]
+  
     gsap.fromTo(".skill-card", 
-      { y: 50, opacity: 0 },
+      { y: 100, opacity: 0, scale: 0.9 },
       { 
         y: 0, 
         opacity: 1, 
-        stagger: 0.2, 
-        duration: 0.8, 
-        ease: "power2.out",
+        scale: 1,
+        stagger: 0.15, 
+        duration: 1, 
+        ease: "expo.out",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 70%", // Trigger earlier so you see them!
+          start: "top 60%",
         }
       }
     );
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="min-h-screen relative py-32 px-6 flex flex-col items-center justify-center overflow-hidden border-b border-white/5">
+    <section ref={containerRef} className="min-h-screen relative py-32 px-6 flex flex-col items-center justify-center overflow-hidden border-y border-white/5 bg-dev-bg">
       
-      {/* Background Layer: Set to z-0 so it stays behind [cite: 21] */}
-      <div ref={parallaxRef} className="absolute inset-0 z-0 opacity-[0.05] select-none pointer-events-none font-mono text-[10vw] leading-none uppercase">
-        <div className="whitespace-nowrap">Color: Red;</div>
-        <div className="whitespace-nowrap ml-20">Console.log("God");</div>
-        <div className="whitespace-nowrap font-bold">Margin: 0 Auto;</div>
+     
+      <div ref={parallaxRef} className="absolute inset-0 z-0 opacity-[0.07] select-none pointer-events-none font-black text-[15vw] leading-none uppercase tracking-tighter text-dev-green">
+        <div className="whitespace-nowrap">DISPLAY: FLEX;</div>
+        <div className="whitespace-nowrap ml-40">MARGIN: 0 AUTO;</div>
+        <div className="whitespace-nowrap opacity-40">CONSOLE.LOG("GOD");</div>
       </div>
 
-      <div className="z-10 text-center mb-20">
-        <h2 className="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tighter">The "Honeymoon" Phase</h2>
-        <p className="text-gray-400 max-w-lg mx-auto text-lg">
-          You just centered a div on your first try. You are effectively the main character 
-          of the internet. [cite: 31]
+      
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-dev-green/10 rounded-full blur-[120px] pointer-events-none z-0" />
+
+      
+      <div className="z-10 text-center mb-24">
+        <div className="flex justify-center mb-8 drop-shadow-[0_0_25px_rgba(0,255,65,0.2)] scale-110">
+         
+          <DeveloperSprite pose="idle" accessory="glasses" />
+        </div>
+        
+        <h2 className="text-6xl md:text-8xl font-black mb-6 uppercase tracking-tighter leading-none">
+          The <span className="text-dev-green">Honeymoon</span> Phase
+        </h2>
+        <p className="text-gray-400 max-w-xl mx-auto text-lg md:text-xl font-mono">
+          [LOG] You just centered a div on your first try. 
+          You are effectively the main character of the internet.
         </p>
       </div>
 
-      {/* Foreground Layer: Interaction Cards [cite: 22] */}
-      <div className="z-20 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+      
+      <div className="z-20 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl px-4">
         {[
-          { title: "HTML5", desc: "Thinking you're a hacker for using Inspect Element.", icon: "🌐" },
-          { title: "CSS3", desc: "Spent 4 hours choosing between #ff0000 and #fe0000.", icon: "🎨" },
-          { title: "JS", desc: "The alert('Hello') worked. You are now a senior engineer.", icon: "⚡" }
+          { title: "HTML5", desc: "Thinking you're a high-level hacker because you used Inspect Element.", icon: "🌐" },
+          { title: "CSS3", desc: "Spent 4 hours choosing between #ff0000 and #fe0000. It mattered.", icon: "🎨" },
+          { title: "JS", desc: "The alert('Hello') worked. You are now officially a Senior Engineer.", icon: "⚡" }
         ].map((skill, i) => (
-          <div key={i} className="skill-card group p-10 bg-zinc-900/40 border border-white/10 rounded-2xl hover:border-dev-green hover:bg-zinc-800/60 transition-all duration-300 cursor-pointer">
-            <span className="text-5xl mb-6 block group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-300">{skill.icon}</span>
-            <h3 className="text-2xl font-bold text-dev-green mb-3 uppercase">{skill.title}</h3>
-            <p className="text-gray-400 group-hover:text-white transition-colors">{skill.desc}</p>
+          <div 
+            key={i} 
+            onMouseEnter={() => playSFX('/sounds/keyboard_click.mp3', 0.05)}
+            className="skill-card group p-12 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-3xl hover:border-dev-green/50 hover:bg-white/[0.07] transition-all duration-500 cursor-none"
+          >
+            <div className="text-6xl mb-8 transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500">
+              {skill.icon}
+            </div>
+            <h3 className="text-3xl font-black text-dev-green mb-4 uppercase tracking-tight">
+              {skill.title}
+            </h3>
+            <p className="text-gray-400 text-lg group-hover:text-white transition-colors leading-relaxed">
+              {skill.desc}
+            </p>
+            
+            {}
+            <div className="mt-8 h-[1px] w-0 group-hover:w-full bg-dev-green transition-all duration-700 opacity-30" />
           </div>
         ))}
       </div>

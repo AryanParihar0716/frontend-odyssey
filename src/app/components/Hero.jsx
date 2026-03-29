@@ -2,7 +2,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { TextPlugin } from 'gsap/TextPlugin';
-import DeveloperSprite from './DeveloperSprite'; // Ensure the path is correct
+import DeveloperSprite from './DeveloperSprite';
+import { playSFX } from "../../utils/audio";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(TextPlugin);
@@ -15,17 +16,23 @@ export default function Hero() {
   useEffect(() => {
     const tl = gsap.timeline();
 
-    // 1. Initial fade in of the sprite and terminal
+    // 1. Initial fade in of the content
     tl.fromTo(".hero-content", 
       { opacity: 0, y: 30 }, 
       { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
     );
 
-    // 2. Typewriter animation for the main title
+    // 2. Typewriter animation with Sound Integration
     tl.to(titleRef.current, {
       duration: 2,
       text: "THE LIFE OF A DEVELOPER",
       ease: "none",
+      onUpdate: () => {
+        // Randomly play keyboard sound as letters appear
+        if (Math.random() > 0.85) {
+          playSFX('/sounds/keyboard_click.mp3', 0.1); 
+        }
+      }
     });
 
     // 3. Blinking cursor animation
@@ -39,47 +46,47 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="h-screen flex flex-col items-center justify-center p-4 md:p-10 relative overflow-hidden bg-dev-bg">
+    <section className="h-screen flex flex-col items-center justify-center p-4 md:p-10 relative overflow-hidden bg-dev-bg bg-grid">
       
-      {/* Container for Sprite + Terminal (Responsiveness handled here) */}
-      <div className="hero-content flex flex-col lg:flex-row items-center justify-center gap-10 w-full max-w-6xl z-10">
+      {/* Container for Sprite + Terminal */}
+      <div className="hero-content flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-6xl z-10">
         
-        {/* The Protagonist: Pose set to 'hero' for the awakening */}
-        <div className="flex-shrink-0">
-          <DeveloperSprite pose="hero" />
+        {/* The Protagonist: Now with Bedhead for the "Just Woke Up" story vibe */}
+        <div className="flex-shrink-0 drop-shadow-[0_0_20px_rgba(0,255,65,0.15)]">
+          <DeveloperSprite pose="hero" accessory="bedhead" />
         </div>
 
         {/* Visual Design: Terminal Aesthetic */}
-        <div className="terminal-window w-full border border-dev-green/30 rounded-lg bg-black/80 backdrop-blur-md shadow-2xl shadow-dev-green/10 overflow-hidden">
+        <div className="terminal-window w-full border border-dev-green/30 rounded-xl bg-black/60 backdrop-blur-xl shadow-2xl shadow-dev-green/5 overflow-hidden">
           
           {/* Terminal Header */}
-          <div className="bg-[#1a1a1a] p-3 flex gap-2 border-b border-white/5">
+          <div className="bg-[#1a1a1a]/80 p-4 flex gap-2 border-b border-white/5">
             <div className="w-3 h-3 rounded-full bg-red-500/50" />
             <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
             <div className="w-3 h-3 rounded-full bg-green-500/50" />
-            <span className="text-[10px] text-gray-500 ml-2 font-mono uppercase tracking-widest">odyssey_terminal — 80x24</span>
+            <span className="text-[10px] text-gray-500 ml-3 font-mono uppercase tracking-[0.2em]">odyssey_v2.0 — bash</span>
           </div>
 
           {/* Terminal Content */}
-          <div className="p-6 md:p-12 font-mono">
-            <p className="text-dev-green mb-4 text-sm md:text-base opacity-70">
+          <div className="p-8 md:p-12 font-mono">
+            <p className="text-dev-green/60 mb-6 text-sm md:text-base">
               $ sudo run startup_sequence.sh
             </p>
             
-            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-black leading-none tracking-tighter uppercase">
               <span ref={titleRef}></span>
-              <span ref={cursorRef} className="inline-block w-3 h-6 md:w-5 md:h-12 bg-dev-green ml-2 align-middle"></span>
+              <span ref={cursorRef} className="inline-block w-3 h-8 md:w-5 md:h-14 bg-dev-green ml-2 align-middle"></span>
             </h1>
 
-            <p className="mt-8 text-gray-400 text-sm md:text-lg max-w-xl leading-relaxed">
+            <p className="mt-10 text-gray-500 text-sm md:text-lg max-w-xl leading-relaxed italic border-l border-white/10 pl-6">
               [Session Started] Prepare for a journey through coffee-fueled nights, 
               stubborn bugs, and the sweet relief of a successful deployment.
             </p>
 
             {/* Interaction Hint */}
-            <div className="mt-12 flex items-center gap-4 group">
-              <div className="h-[1px] w-12 bg-dev-green/30 group-hover:w-20 transition-all duration-500" />
-              <span className="text-xs uppercase tracking-[0.3em] text-dev-green animate-pulse">
+            <div className="mt-16 flex items-center gap-6 group cursor-pointer">
+              <div className="h-[1px] w-16 bg-dev-green/20 group-hover:w-24 group-hover:bg-dev-green transition-all duration-700" />
+              <span className="text-[10px] uppercase tracking-[0.5em] text-dev-green/80 animate-pulse group-hover:text-dev-green transition-colors">
                 Scroll to Begin
               </span>
             </div>
@@ -87,9 +94,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Decorative background grid */}
+      {/* Background visual depth using the grid utility */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" 
-           style={{ backgroundImage: 'radial-gradient(var(--color-dev-green) 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }} />
+           style={{ backgroundImage: 'radial-gradient(var(--color-dev-green) 0.5px, transparent 0.5px)', backgroundSize: '40px 40px' }} />
     </section>
   );
 }

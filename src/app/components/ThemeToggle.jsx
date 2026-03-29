@@ -10,7 +10,7 @@ export default function ThemeToggle() {
     setIsLight(newMode);
     document.documentElement.classList.toggle("light");
 
-    // Bonus Animation: A "Flash" effect when entering light mode
+    
     if (newMode) {
       gsap.fromTo("body", 
         { filter: "brightness(9)" }, 
